@@ -3,14 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "server": "node ./bin/www",
-    "client": "npm run start --prefix client",
-    "start": "concurrently \"npm run server\" \"npm run client\""
+    "start": "node ./bin/www",
+    "client": "npm run start --prefix client"
   },
   "dependencies": {
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
-    "concurrently": "^3.5.1",
     "debug": "~2.6.9",
     "ejs": "~2.5.7",
     "express": "~4.15.5",
