@@ -4,9 +4,12 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
+var checkSession = require('./middlewares/checkSession');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+
 
 var app = express();
 
@@ -19,11 +22,20 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+app.use(session({resave: true, saveUninitialized: false ,secret: 'peace', expires: new Date(Date.now() + (30 * 86400 * 1000))}));
+
+app.use(checkSession);//https://expressjs.com/en/guide/writing-middleware.html
 app.use('/', index);
 app.use('/users', users);
+
+app.get('/login',function (req, res, next) {
+    res.render('login');
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -5,8 +5,211 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-    <p>This the test app by pinghe at CDK Global</p>
+  <div class="header">
+    <h1>Welcome to the User Manage System</h1>
+    <a href="/download">TestDownload</a>
+
+  </div>
+    <div class="columnName column">
+      <p class="cid">ID</p>
+      <p class="cname">Name</p>
+      <p class="cemail">Email</p>
+      <button id="addUser"></button>
+      <div class="searchBar">
+        <input type="search" name="search" >
+      </div>
+    </div>
+    <form id="addForm" class="column" method="post" action="/addUser">
+      <div>
+        <input type="file" name="avatar" id="avatar" >
+        <label tabindex="0" for="avatar" id="avatarLabel" class="">Upload avatar...</label>
+      </div>
+      <input type="text" name="name" placeholder="name">
+      <input type="email" name="email" placeholder="email">
+      <input type="password" name="password" placeholder="password">
+      <input type="submit" id="submit" value="submit">
+    </form>
+    <div class="userList">
+
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+
+        let currentAvatar=null;
+        let currentDataList = null;
+      function getData() {
+          $.ajax({
+              url:"/allUser",
+              type:"GET",
+              contentType:"application/json; charset=utf-8",
+              async: true,
+          }).then(function (response) {
+              console.log(response);
+              //response= JSON.parse(response);
+              currentDataList = response;
+              displayData(response);
+          });
+      };
+
+      function displayData(response, keyword){
+          let list = document.querySelector(".userList");
+          list.innerHTML="";
+          if(keyword&&keyword.length>0){
+              for(let i=0;i<response.length;i++){
+                  let listitem = document.createElement("div");
+                  listitem.setAttribute("class","user column");
+
+                  let id = document.createElement("p");
+                  id.setAttribute("class","cid");
+                  let idFind = find(response[i].id+"", keyword)
+                  id.innerHTML=  idFind.value;
+                  let name = document.createElement("p");
+                  name.setAttribute("class","cname");
+                  let nameFind =find(response[i].name, keyword);
+                  name.innerHTML= nameFind.value;
+                  let email = document.createElement("p");
+                  email.setAttribute("class","cemail");
+                  let emailFind = find(response[i].email, keyword);
+                  email.innerHTML= emailFind.value;
+                  if(idFind.flag||nameFind.flag||emailFind.flag){
+                      let deleteBtn = document.createElement("button");
+                      deleteBtn.setAttribute("data-user",JSON.stringify(response[i]));
+                      listitem.appendChild(id);
+                      listitem.appendChild(name);
+                      listitem.appendChild(email);
+                      listitem.appendChild(deleteBtn);
+                      list.appendChild(listitem);
+                  }
+
+              }
+          }else{
+
+              for(let i=0;i<response.length;i++){
+                  let listitem = document.createElement("div");
+                  listitem.setAttribute("class","user column");
+
+                  let id = document.createElement("p");
+                  id.setAttribute("class","cid");
+                  id.innerHTML=response[i].id;
+                  let name = document.createElement("p");
+                  name.setAttribute("class","cname");
+                  name.innerHTML=response[i].name;
+                  let email = document.createElement("p");
+                  email.setAttribute("class","cemail");
+                  email.innerHTML=response[i].email;
+                  let deleteBtn = document.createElement("button");
+                  deleteBtn.setAttribute("data-user",JSON.stringify(response[i]));
+                  listitem.appendChild(id);
+                  listitem.appendChild(name);
+                  listitem.appendChild(email);
+                  listitem.appendChild(deleteBtn);
+                  list.appendChild(listitem);
+              }
+          }
+
+      }
+
+      //find all occurence of keyword in s and add<b> of keyword,return flag show whether finded
+      function find(s, keyword){
+          let flag = false;
+          let r = "";
+          while(s.indexOf(keyword)!=-1){
+              flag=true;
+              index=s.indexOf(keyword);
+              r = r+s.substring(0,index)+'<b>'+keyword+'</b>';
+              s = s.substring(index+keyword.length,s.length);
+          }
+          r= r+s;
+          return {value:r, flag:flag};
+      }
+
+      $(document).ready(function () {
+          getData();
+
+
+        $("#avatar").on("change",function (e) {
+            $("#avatarLabel").text(e.target.files[0].name);
+            let myFormData = new FormData();
+            myFormData.append('avatar', e.target.files[0]);
+            $.ajax({
+                url:"/upload",
+                type: "POST",
+                data: myFormData,
+                processData: false,
+                contentType: false,
+                async: true,
+                cache: false
+            }).then(function (response) {
+                console.log('upload success'+response);
+                currentAvatar = response;
+                //$("#avatarLabel").text(response);
+                $("#avatarLabel").addClass('success');
+            });
+        });
+
+        $("#addForm").on("submit", function (e) {
+            e.preventDefault();
+            let inputArray = $("#addForm>input:not([type=submit])").toArray();
+            // if wrong obj in ajax request, it will report bad request
+            $.ajax({
+                url:"/addUser",
+                type: "POST",
+                data: JSON.stringify({avatar: currentAvatar, name:inputArray[0].value, email:inputArray[1].value, password:inputArray[2].value}),
+                contentType:"application/json; charset=utf-8",
+                dataType: "json"
+            }).then(function (response) {
+                console.log(response);
+                getData();
+                document.getElementById("addForm").reset();
+                $("#avatarLabel").text("Upload avatar...");
+                $("#avatarLabel").removeClass('success');
+            });
+        });
+        //https://stackoverflow.com/questions/19237235/jquery-button-click-event-not-firing
+          // the button is dynamic element
+        /*
+         $(".userList .user button").click(function (e) {
+         console.log('click1');
+
+         $.ajax({
+         url:"/deleteUser",
+         type: "POST",
+         data: e.target.dataset.user,
+         contentType:"application/json; charset=utf-8",
+         dataType: "json"
+         }).then(function (response) {
+         console.log(response);
+         getData();
+         });
+         });
+         */
+          $(document).on("click", ".userList .user button", function(e){
+              console.log('clickButton');
+
+              $.ajax({
+                  url:"/deleteUser",
+                  type: "POST",
+                  data: e.target.dataset.user,
+                  contentType:"application/json; charset=utf-8",
+                  dataType: "json"
+              }).then(function (response) {
+                  console.log(response);
+                  getData();
+              });
+          });
+
+          $(".searchBar input[type=search]").on("keyup", function (e) {
+              let keyword =e.target.value;
+              console.log(keyword);
+
+
+              displayData(currentDataList, e.target.value);
+
+          });
+
+
+      });
+    </script>
   </body>
 </html>

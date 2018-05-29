@@ -1,8 +1,185 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  padding: 0px;
+  font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+b{
+    color: #00B7FF;
 }
 
 a {
   color: #00B7FF;
 }
+
+.header{
+    padding: 2rem 0 1rem 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.header h1{
+    -webkit-margin-before: 0em;
+    -webkit-margin-after: 0em;
+    padding-right: 2rem;
+    max-width: 60%;
+}
+
+button, input, label, div:focus {outline:0;}
+p{
+    -webkit-margin-before: 0em;
+    -webkit-margin-after: 0em;
+}
+.column{
+    width: 80%;
+    max-width: 60rem;
+    margin: 0rem auto;
+    padding: 0.4rem 0 0.2rem 0;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    transition: all 1s ease;
+}
+
+.column p{
+    font-size: 1.6rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.column .cid, .column .cname{
+    width: 20%;
+}
+.column .cemail{
+    width: 40%;
+}
+.user:hover{
+    background-color: lightblue;
+
+}
+.columnName{
+    border-bottom: 1px solid black;
+    background-color: #f2f2f2;
+}
+
+.userList .user button{
+    background: url("http://pngimages.net/sites/default/files/cancel-png-image-67146.png") no-repeat;
+    background-size: 2rem 2rem;
+    height: 2rem;
+    width: 2rem;
+    border: none;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: all 1s ease;
+    transform: translateX(4rem);
+}
+
+.userList .user button:hover{
+  background-color: red;
+}
+
+/*search bar start*/
+.searchBar {
+    margin-left: 0.5rem;
+}
+.searchBar input {
+    outline: none;
+}
+.searchBar input[type=search] {
+    -webkit-appearance: textfield;
+    -webkit-box-sizing: content-box;
+    font-family: inherit;
+    font-size: 100%;
+
+}
+.searchBar input::-webkit-search-decoration,
+.searchBar input::-webkit-search-cancel-button {
+    display: none;
+}
+
+
+.searchBar input[type=search] {
+    background: transparent url(https://cdn3.iconfinder.com/data/icons/web-and-internet-icons/512/Magnifying_Glass-512.png) no-repeat right -1px top 0px;
+    background-size: 30px 30px;
+    border: none;
+    padding: 5px 5px 5px 5px;
+    width: 15px;
+    color: transparent;
+
+    -webkit-border-radius: 10em;
+    -moz-border-radius: 10em;
+    border-radius: 10em;
+
+    -webkit-transition: all .5s;
+    -moz-transition: all .5s;
+    transition: all .5s;
+}
+.searchBar input[type=search]:focus {
+    width: 8rem;
+    background-position: right;
+    background-color: #fff;
+    border-color: 1px solid lightgreen;
+    color: black;
+
+    -webkit-box-shadow: 0 0 5px rgba(0,102,51,.9);
+    -moz-box-shadow: 0 0 5px rgba(0,102,51,.9);
+    box-shadow: 0 0 5px rgba(0,102,51,.9);
+}
+/*search bar end*/
+
+#addUser{
+    background: transparent url(https://cdn4.iconfinder.com/data/icons/vectory-bonus-3/40/button_add-512.png);
+    background-size: 30px 30px;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 20px;
+    transition: all 1s ease;
+    cursor: pointer;
+}
+#addUser:hover{
+    background-color: greenyellow;
+}
+#addForm>div{
+    position: relative;
+    width: 20%;
+}
+#addForm>div>input{
+    display: none;
+}
+#addForm>div>label{
+    font-size: 1.5rem;
+    display: block;
+    padding-top: 3px;
+    margin: 0;
+    border: 1px solid lightgray;
+    height: calc(100% - 5px);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: all 1s ease;
+}
+#addForm>div>label:hover{
+    background-color: greenyellow;
+}
+#addForm>input{
+    font-size: 1.6rem;
+    width: 20%;
+}
+#addForm input[type="submit"]{
+
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 1s ease;
+    /*why no background, the height of submit button can't change*/
+    background: white;
+}
+#addForm input[type="submit"]:hover{
+    background-color: greenyellow;
+}
+
+.success{
+    background-color: lightgreen;
+}
+
